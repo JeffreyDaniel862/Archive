@@ -1,23 +1,20 @@
-import { useState } from 'react'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import Home from './pages/Home'
+import SignUp from './pages/SignUp'
+import SignIn from './pages/SignIn'
+import About from './pages/About'
+import Dashboard from './pages/Dashboard'
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const router = createBrowserRouter([
+    { path: '/', element: <Home /> },
+    { path: 'sign-up', element: <SignUp /> },
+    { path: 'sign-in', element: <SignIn /> },
+    { path: 'about', element: <About /> },
+    { path: 'dashboard', element: <Dashboard /> }
+  ])
   return (
-    <div className='w-full p-3 border flex gap-12 justify-center bg-sky-300'>
-      <h1>JD Blog</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <RouterProvider router={router} />
   )
 }
 
