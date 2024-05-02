@@ -21,7 +21,7 @@ export default function Header() {
                 <FaMoon />
             </Button>
             <Link to={'/sign-in'}>
-                <Button className='bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 hover:transition-all delay-100 hover:-translate-y-1' pill>Sign-In</Button>
+                <Button outline className='bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 hover:transition-all delay-100 hover:-translate-y-1' pill>Sign-In</Button>
             </Link>
             <Navbar.Toggle />
         </div>
