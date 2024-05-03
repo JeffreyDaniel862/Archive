@@ -1,8 +1,8 @@
 import { Label, TextInput } from "flowbite-react";
 
-export default function Input({ holder, id }) {
+export default function Input({ holder, id, type, ...props }) {
     return <div>
         <Label value={holder} />
-        <TextInput type="text" placeholder={holder} id={id} />
+        <TextInput type={type} placeholder={holder} id={id} {...props} />
     </div>
 }

@@ -21,9 +21,9 @@ export default function SignUp() {
                 </div>
                 <div className="flex-1">
                     <Form action="post" className="flex flex-col gap-4">
-                        <Input holder={'Username'} id={'username'} />
-                        <Input holder={'Email'} id={'email'} />
-                        <Input holder={'Password'} id={'password'} />
+                        <Input type={'text'} holder={'Username'} id={'username'} required />
+                        <Input type={'email'} holder={'Email'} id={'email'} required />
+                        <Input type={'password'} holder={'Password'} id={'password'} required />
                         <Button type="submit" className='bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 hover:transition-all delay-100 hover:-translate-y-1' pill>Sign-In</Button>
                     </Form>
                     <div className="mt-3 flex gap-6 font-semibold">
