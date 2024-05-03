@@ -15,6 +15,16 @@ try {
 
 app.use('/jd/auth', authRoutes);
 
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server error";
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message
+  });
+});
+
 app.listen(process.env.PORT, () => {
-    console.log(`Server is up and running in port ${process.env.PORT}`);
+  console.log(`Server is up and running in port ${process.env.PORT}`);
 })
