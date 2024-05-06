@@ -34,8 +34,7 @@ export default function FooterComponent() {
                 <div className="w-full sm:flex sm:items-center sm:justify-between">
                     <Footer.Copyright href="/home" by="Jeffrey Daniel" year={new Date().getFullYear()} />
                     <div className="flex gap-6 mt-5 md:mt-0 sm:justify-center">
-                        <Footer.Icon icon={BsGithub}/>
-                        {/* <Footer.Icon /> */}
+                        <Footer.Icon href="https://github.com/JeffreyDaniel862/" icon={BsGithub}/>
                     </div>
                 </div>
             </div>

@@ -1,15 +1,25 @@
-import { Form, Link, redirect, useActionData, useNavigation } from "react-router-dom";
+import { Form, Link, useActionData, useNavigate, useNavigation } from "react-router-dom";
 import Input from "../components/Input";
 import { Alert, Button, Spinner } from "flowbite-react";
+import { useDispatch } from "react-redux";
+import { login } from "../store/userSlice";
+import { useEffect } from "react";
 
 export default function SignIn() {
 
     const navigation = useNavigation();
     const isSubmitting = navigation.state == 'submitting';
-
+    const dispatch = useDispatch();
     const data = useActionData();
+    const navigate = useNavigate();
 
-    if (data) console.log(data);
+    useEffect(() => {
+        if (data && data.statusCode == 200) {
+            const { statusCode, ...user } = data
+            dispatch(login(user));
+            navigate('/');
+        }
+    }, [data, dispatch, navigate])
 
     return (
         <div className="min-h-screen mt-20">
@@ -45,9 +55,9 @@ export default function SignIn() {
                         <Link className="text-blue-900 hover:underline" to={'/sign-up'}>Sign-up</Link>
                     </div>
                     {
-                        data && data.statusCode != 201 && <Alert className="mt-4" color={'failure'}>
-                                {data?.message}
-                            </Alert>
+                        data && data.statusCode != 200 && <Alert className="mt-4" color={'failure'}>
+                            {data?.message}
+                        </Alert>
                     }
                 </div>
             </div>
@@ -69,8 +79,5 @@ export const signinAction = async ({ request }) => {
         body: JSON.stringify(authData)
     });
 
-    if(!response.ok) {
-        return response
-    }
-    return redirect('/');
+    return response
 }
