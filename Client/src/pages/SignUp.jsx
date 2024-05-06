@@ -1,6 +1,7 @@
 import { Form, Link, redirect, useActionData, useNavigation } from "react-router-dom";
 import Input from "../components/Input";
 import { Alert, Button, Spinner } from "flowbite-react";
+import OAuth from "../components/OAuth";
 
 export default function SignUp() {
 
@@ -41,6 +42,7 @@ export default function SignUp() {
                             }
                         </Button>
                     </Form>
+                    <OAuth />
                     <div className="mt-3 flex gap-6 font-semibold">
                         <span>Already a JD ?</span>
                         <Link className="text-blue-900 hover:underline" to={'/sign-in'}>Sign-in</Link>

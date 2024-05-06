@@ -15,6 +15,10 @@ const User = db.define('user', {
     password: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    displayPictureURL: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 }, {tableName: 'users', timestamps: true});
 

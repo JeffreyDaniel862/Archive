@@ -4,6 +4,7 @@ import { Alert, Button, Spinner } from "flowbite-react";
 import { useDispatch } from "react-redux";
 import { login } from "../store/userSlice";
 import { useEffect } from "react";
+import OAuth from "../components/OAuth";
 
 export default function SignIn() {
 
@@ -50,6 +51,7 @@ export default function SignIn() {
                             }
                         </Button>
                     </Form>
+                    <OAuth />
                     <div className="mt-3 flex gap-6 font-semibold">
                         <span>Not a JD ?</span>
                         <Link className="text-blue-900 hover:underline" to={'/sign-up'}>Sign-up</Link>
