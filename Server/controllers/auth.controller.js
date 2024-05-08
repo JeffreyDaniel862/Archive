@@ -38,7 +38,7 @@ export const Oauth = async (req, res, next) => {
     try {
         const validUser = await User.findOne({ where: { email } });
         if (validUser) {
-            const user = { id: validUser.id, username: validUser.username, email: validUser.email, createdAt: validUser.createdAt, updatedAt: validUser.updatedAt }
+            const user = { id: validUser.id, username: validUser.username, email: validUser.email, createdAt: validUser.createdAt, updatedAt: validUser.updatedAt, displayPicture: validUser.displayPictureURL }
             const token = jwt.sign({ id: validUser.id }, process.env.JWT_MAGIC);
             res.cookie('access_token', token, { httpOnly: true }).status(200).json(user);
         } else {
