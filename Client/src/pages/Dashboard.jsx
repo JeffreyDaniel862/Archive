@@ -18,12 +18,10 @@ export default function Dashboard() {
     }, [location.search]);
     return (
         <div className="min-h-screen flex flex-col gap-3 md:flex-row">
-            <div className="md:w-56">
+            <div className="hidden md:inline-block md:w-56">
                 <SideTab  tab={tab}  />
             </div>
-            <div>
-                {tab === 'profile' && <Profile />}
-            </div>
+            {tab === 'profile' && <Profile />}
         </div>
     )
 }
