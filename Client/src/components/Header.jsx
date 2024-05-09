@@ -27,7 +27,7 @@ export default function Header() {
             </Button>
             {
                 user ?
-                    <Dropdown arrowIcon={false} inline label={<Avatar alt='displaypicture' img={"https://lh3.googleusercontent.com/a/ACg8ocKdo4CWzwvrkYKn7_68Oj2NgXleNipAzhUEbDHnDEAwGjG_XtM=s96-c"} rounded />} >
+                    <Dropdown arrowIcon={false} inline label={<Avatar alt='displaypicture' img={user.displayPicture} rounded />} >
                         <Dropdown.Header>
                             <span className='block text-sm'>
                                 {user.username}
