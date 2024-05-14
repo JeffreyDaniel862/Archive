@@ -23,7 +23,7 @@ export default function Header() {
         </Button>
         <div className='flex gap-3 md:order-2'>
             <Button onClick={() => { dispatch(toggleTheme()) }} className='w-12 h-10 hidden sm:inline' color={'gray'} pill>
-                {theme == 'light' ? <FaMoon /> : <FaSun />}
+                {theme != 'light' ? <FaMoon /> : <FaSun />}
             </Button>
             {
                 user ?
