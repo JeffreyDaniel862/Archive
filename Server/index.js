@@ -2,9 +2,12 @@ import express from 'express';
 import './env.js'
 import { db } from './config/database.js';
 import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser())
 
 try {
   await db.authenticate();
@@ -14,6 +17,7 @@ try {
 }
 
 app.use('/jd/auth', authRoutes);
+app.use('/jd/user', userRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
