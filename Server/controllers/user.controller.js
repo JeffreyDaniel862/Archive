@@ -18,9 +18,12 @@ export const updateUser = async (req, res, next) => {
             id: user.id,
             username: user.username,
             email: user.email,
-            displayPicture: user.displayPictureURL
+            displayPicture: user.displayPictureURL,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+            statusCode: 200
         });
     } catch (error) {
-        return next(error)
+        next(error)
     }
 }

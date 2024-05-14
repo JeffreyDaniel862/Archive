@@ -5,6 +5,7 @@ import SignIn, { signinAction } from './pages/SignIn'
 import About from './pages/About'
 import Dashboard from './pages/Dashboard'
 import RootLayout from './pages/RootLayout'
+import { userAction } from './components/Profile'
 function App() {
   const router = createBrowserRouter([
     {
@@ -15,7 +16,7 @@ function App() {
         { path: 'sign-up', element: <SignUp />, action: signupAction },
         { path: 'sign-in', element: <SignIn />, action: signinAction },
         { path: 'about', element: <About /> },
-        { path: 'dashboard', element: <Dashboard /> }
+        { path: 'dashboard', element: <Dashboard />, action: userAction }
       ]
     },
 

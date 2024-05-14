@@ -24,7 +24,7 @@ export const signIn = async (req, res, next) => {
         if (!validUser) return next(errorHandler(404, "User not found"));
         const validPassword = bcryptjs.compareSync(password, validUser.password);
         if (!validPassword) return next(errorHandler(404, "Email or Password is incorrect"));
-        const user = { id: validUser.id, username: validUser.username, email: validUser.email, createdAt: validUser.createdAt, updatedAt: validUser.updatedAt, statusCode: 200 }
+        const user = { id: validUser.id, username: validUser.username, email: validUser.email, createdAt: validUser.createdAt, updatedAt: validUser.updatedAt, statusCode: 200, displayPicture: validUser.displayPictureURL }
         const token = jwt.sign({ id: validUser.id }, process.env.JWT_MAGIC);
         res.cookie('access_token', token, { httpOnly: true }).status(200).json(user);
     } catch (error) {
