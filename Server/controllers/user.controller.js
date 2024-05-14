@@ -27,3 +27,15 @@ export const updateUser = async (req, res, next) => {
         next(error)
     }
 }
+
+export const deleteUser = async (req, res, next) => {
+    if (req.user.id != req.params.userID) {
+        return next(errorHandler(401, "Unauthorized to delete this account"));
+    }
+    try {
+        await User.destroy({ where: { id: req.params.userID } });
+        res.clearCookie('access_token').status(204).json({ message: "Account Deleted", statusCode: 204 });
+    } catch (error) {
+        next(error);
+    }
+}
