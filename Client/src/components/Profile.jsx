@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import app from '../firebase.js'
 import { Form, useActionData, useNavigate, useSubmit } from "react-router-dom";
-import { destroy, update } from "../store/userSlice.js";
+import { destroy, logout, update } from "../store/userSlice.js";
 import { useMutation } from "@tanstack/react-query";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
@@ -33,7 +33,7 @@ export default function Profile() {
             navigate('/sign-in');
             setTimeout(() => {
                 dispatch(destroy());
-            }, 250);
+            }, 20);
         }
     }, [isSuccess, dispatch, navigate]);
     const handleDelete = (id) => {
@@ -107,6 +107,16 @@ export default function Profile() {
         );
     }
 
+    const handleSignOut = async () => {
+        const response = await fetch('/jd/auth/signout');
+        if(response.ok){
+            navigate('/sign-in');
+            setTimeout(() => {
+                dispatch(logout());
+            }, 250);
+        }
+    }
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData(prevData => ({ ...prevData, [name]: value }));
@@ -171,7 +181,7 @@ export default function Profile() {
             {returnContent}
             <div className="flex justify-between mt-5 text-red-600">
                 <span className="cursor-pointer hover:underline" onClick={() => setShowModal(true)}>Delete Account</span>
-                <span className="cursor-pointer hover:underline">Sign Out</span>
+                <span className="cursor-pointer hover:underline" onClick={handleSignOut}>Sign Out</span>
             </div>
             <Modal show={showModal} popup onClose={() => setShowModal(false)} size={'md'}>
                 <Modal.Header />
