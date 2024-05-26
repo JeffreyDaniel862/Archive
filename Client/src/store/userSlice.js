@@ -9,10 +9,13 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            state.user = action.payload
+            state.user = action.payload;
         },
         update: (state, action) => {
-            state.user = action.payload
+            state.user = action.payload;
+        },
+        deleteUser: (state, action) => {
+            state.user = null;
         }
     }
 });
