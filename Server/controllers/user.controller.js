@@ -34,7 +34,7 @@ export const deleteUser = async (req, res, next) => {
     }
     try {
         await User.destroy({ where: { id: req.params.userID } });
-        res.clearCookie('access_token').status(204).json({ message: "Account Deleted", statusCode: 204 });
+        res.clearCookie('access_token').status(200).json({ message: "Account Deleted", success: true });
     } catch (error) {
         next(error);
     }

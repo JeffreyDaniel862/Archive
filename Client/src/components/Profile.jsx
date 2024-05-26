@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from "react-redux"
 import Input from '../components/Input'
-import { Alert, Button, Spinner } from "flowbite-react";
+import { Alert, Button, Modal, Spinner } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import app from '../firebase.js'
-import { Form, useActionData, useNavigation, useSubmit } from "react-router-dom";
-import { update } from "../store/userSlice.js";
+import { Form, useActionData, useNavigate, useSubmit } from "react-router-dom";
+import { destroy, update } from "../store/userSlice.js";
+import { useMutation } from "@tanstack/react-query";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function Profile() {
     const initialUploadData = {
@@ -21,17 +23,33 @@ export default function Profile() {
         isError: false,
         returnError: null
     }
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { mutate, isError, error, isPending, isSuccess } = useMutation({
+        mutationFn: deleteUser
+    })
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/sign-in');
+            setTimeout(() => {
+                dispatch(destroy());
+            }, 250);
+        }
+    }, [isSuccess, dispatch, navigate]);
+    const handleDelete = (id) => {
+        setShowModal(false);
+        mutate(id);
+    }
     const { user } = useSelector(state => state.user);
+    const [showModal, setShowModal] = useState(false);
     const [uploadData, setUploadData] = useState(initialUploadData);
     const [returnData, setReturnData] = useState(initialReturnData);
     const [file, setFile] = useState();
     const [formData, setFormData] = useState({ id: user?.id })
     const imageRef = useRef();
-    const navigation = useNavigation();
-    const isSubmitting = navigation.state == 'submitting';
-    const dispatch = useDispatch();
     const submit = useSubmit();
     const data = useActionData();
+
     useEffect(() => {
         if (file) {
             handleUpload(file);
@@ -152,9 +170,27 @@ export default function Profile() {
             </Form>
             {returnContent}
             <div className="flex justify-between mt-5 text-red-600">
-                <span className="cursor-pointer hover:underline">Delete Account</span>
+                <span className="cursor-pointer hover:underline" onClick={() => setShowModal(true)}>Delete Account</span>
                 <span className="cursor-pointer hover:underline">Sign Out</span>
             </div>
+            <Modal show={showModal} popup onClose={() => setShowModal(false)} size={'md'}>
+                <Modal.Header />
+                <Modal.Body>
+                    <div className="text-center">
+                        <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mx-auto mb-3" />
+                        <h3 className="text-lg font-semibold">
+                            Are you sure to delete this account? This action cannot be undone.
+                        </h3>
+                        <div className="flex justify-evenly mt-3">
+                            <Button className="bg-red-600 text-black hover:bg-red-700" onClick={() => handleDelete(user?.id)}>Yes, Delete</Button>
+                            <Button outline>Cancel</Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
+            {
+                isError && !isPending && <Alert color={'failure'} className="mt-5">{error.message || "Unable to delete"}</Alert>
+            }
         </div>
     )
 }
@@ -172,6 +208,18 @@ export const userAction = async ({ request }) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(userData)
+        });
+
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteUser = async (id) => {
+    try {
+        const response = await fetch(`/jd/user/delete/${id}`, {
+            method: "DELETE"
         });
 
         return response;
