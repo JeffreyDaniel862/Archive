@@ -19,9 +19,9 @@ export default function SignUp() {
                     <div>
                         <Link to={'/'} className="text-4xl dark:text-white  font-serif">
                             <span className="px-2 py-1 font-semibold rounded-md bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300">
-                                JD
+                                Arc
                             </span>
-                            Blog
+                            hive
                         </Link>
                         <p className="text-sm mt-5 font-serif">
                             Share the Wisdom, Knowledge, Facts, News you have with the World. Let's join together and grow together. To make a change.
@@ -44,7 +44,7 @@ export default function SignUp() {
                     </Form>
                     <OAuth />
                     <div className="mt-3 flex gap-6 font-semibold">
-                        <span>Already a JD ?</span>
+                        <span>Already a Bee ?</span>
                         <Link className="text-blue-900 hover:underline" to={'/sign-in'}>Sign-in</Link>
                     </div>
                     {

@@ -24,8 +24,8 @@ export default function Header() {
 
     return <Navbar>
         <Link to={'/'} className='self-center whitespace-nowrap text-sm sm:text-xl dark:text-white font-semibold font-serif'>
-            <span className='px-2 py-1 bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 rounded-md font-serif text-white'> JD </span>
-            Blog
+            <span className='px-2 py-1 bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 rounded-md font-serif text-white'>Arc</span>
+           hive
         </Link>
         <form>
             <TextInput type='text' placeholder='Search...' rightIcon={AiOutlineSearch} className='hidden lg:inline' />
@@ -35,7 +35,7 @@ export default function Header() {
         </Button>
         <div className='flex gap-3 md:order-2'>
             <Button onClick={() => { dispatch(toggleTheme()) }} className='w-12 h-10 hidden sm:inline' color={'gray'} pill>
-                {theme != 'light' ? <FaMoon /> : <FaSun />}
+                {theme == 'light' ? <FaMoon /> : <FaSun />}
             </Button>
             {
                 user ?

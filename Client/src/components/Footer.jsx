@@ -14,8 +14,8 @@ export default function FooterComponent() {
                 <div className="grid w-full justify-between sm:flex md:grid-cols-1">
                     <div className="mt-4">
                         <Link to={'/'} className='self-center whitespace-nowrap text-lg sm:text-xl dark:text-white font-semibold font-serif'>
-                            <span className='px-2 py-1 bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 rounded-md font-serif text-white'> JD </span>
-                            Blog
+                            <span className='px-2 py-1 bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 rounded-md font-serif text-white'>Arc</span>
+                            hive
                         </Link>
                     </div>
                     <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-6 mt-4">
