@@ -3,6 +3,7 @@ import './env.js'
 import { db } from './config/database.js';
 import authRoutes from './routes/auth.route.js';
 import userRoutes from './routes/user.route.js';
+import postRoutes from './routes/post.route.js';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -18,6 +19,7 @@ try {
 
 app.use('/jd/auth', authRoutes);
 app.use('/jd/user', userRoutes);
+app.use('/jd/post', postRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
