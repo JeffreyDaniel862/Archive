@@ -4,7 +4,7 @@ import { Alert, Button, Modal, Spinner } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import app from '../firebase.js'
-import { Form, useActionData, useNavigate, useSubmit } from "react-router-dom";
+import { Form, Link, useActionData, useNavigate, useSubmit } from "react-router-dom";
 import { destroy, logout, update } from "../store/userSlice.js";
 import { useMutation } from "@tanstack/react-query";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
@@ -109,7 +109,7 @@ export default function Profile() {
 
     const handleSignOut = async () => {
         const response = await fetch('/jd/auth/signout');
-        if(response.ok){
+        if (response.ok) {
             navigate('/sign-in');
             setTimeout(() => {
                 dispatch(logout());
@@ -179,6 +179,11 @@ export default function Profile() {
                 </Button>
             </Form>
             {returnContent}
+            <div className="mt-5 w-full">
+                <Link to={'/create-post'}>
+                    <Button className="w-full bg-gradient-to-r from-blue-600 via-sky-500 to-sky-300">Create Post</Button>
+                </Link>
+            </div>
             <div className="flex justify-between mt-5 text-red-600">
                 <span className="cursor-pointer hover:underline" onClick={() => setShowModal(true)}>Delete Account</span>
                 <span className="cursor-pointer hover:underline" onClick={handleSignOut}>Sign Out</span>
