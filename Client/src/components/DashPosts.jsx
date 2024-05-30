@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import Card from './Card';
 
 const DashPosts = () => {
     const { user } = useSelector(state => state.user);
@@ -12,7 +13,7 @@ const DashPosts = () => {
     });
 
     useEffect(() => {
-        if(isSuccess){
+        if (isSuccess) {
             setPostData(data);
         }
     }, [data])
@@ -21,7 +22,9 @@ const DashPosts = () => {
         <div>
             Dash Posts.
             {
-                postData && postData.posts.map(post => <p key={post.id}>{post.title}</p>)
+                postData && <div className='flex flex-col md:flex-row md:flex-wrap gap-3 p-3'>
+                    {postData.posts.map(post => <Card key={post.id} post={post} />)}
+                </div>
             }
         </div>
     )
