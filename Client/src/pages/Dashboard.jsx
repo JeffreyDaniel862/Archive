@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 import { Navigate, useLocation } from "react-router-dom";
 import Profile from "../components/Profile";
 import SideTab from "../components/Sidebar";
+import DashPosts from "../components/DashPosts";
 
 export default function Dashboard() {
     const { user } = useSelector(state => state.user);
@@ -18,10 +19,11 @@ export default function Dashboard() {
     }, [location.search]);
     return (
         <div className="min-h-screen flex flex-col gap-3 md:flex-row">
-            <div className="hidden md:inline-block md:w-56">
+            <div className="md:inline-block md:w-56">
                 <SideTab  tab={tab}  />
             </div>
             {tab === 'profile' && <Profile />}
+            {tab === 'posts' && <DashPosts />}
         </div>
     )
 }
