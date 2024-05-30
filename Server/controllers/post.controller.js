@@ -48,9 +48,14 @@ export const getPosts = async (req, res, next) => {
             now.getMonth() - 1,
             now.getDate()
         );
-        const totalPosts = await Post.count();
+        const totalPosts = await Post.count({
+            where: {
+                ...(req.params.userId && { userId: req.params.userId })
+            }
+        });
         const lastMonthPosts = await Post.count({
             where: {
+                ...(req.params.userId && { userId: req.params.userId }),
                 createdAt: {
                     [Sequelize.Op.gt]: aMonthAgo
                 },
