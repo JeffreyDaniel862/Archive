@@ -6,7 +6,7 @@ import About from './pages/About'
 import Dashboard from './pages/Dashboard'
 import RootLayout from './pages/RootLayout'
 import { userAction } from './components/Profile'
-import PostForm from './components/PostForm'
+import PostForm, { postAction } from './components/PostForm'
 function App() {
   const router = createBrowserRouter([
     {
@@ -18,11 +18,10 @@ function App() {
         { path: 'sign-in', element: <SignIn />, action: signinAction },
         { path: 'about', element: <About /> },
         { path: 'dashboard', element: <Dashboard />, action: userAction },
-        { path: 'create-post', element: <PostForm title={'Create Post'} /> }
+        { path: 'create-post', element: <PostForm title={'Create Post'}/>, action: postAction }
       ]
     },
-
-  ])
+  ]);
   return (
     <RouterProvider router={router} />
   )
