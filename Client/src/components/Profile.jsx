@@ -198,7 +198,7 @@ export default function Profile() {
                         </h3>
                         <div className="flex justify-evenly mt-3">
                             <Button className="bg-red-600 text-black hover:bg-red-700" onClick={() => handleDelete(user?.id)}>Yes, Delete</Button>
-                            <Button outline>Cancel</Button>
+                            <Button onClick={() => setShowModal(false)} outline>Cancel</Button>
                         </div>
                     </div>
                 </Modal.Body>
