@@ -62,7 +62,7 @@ export const getPosts = async (req, res, next) => {
             },
         });
 
-        res.status(200).json({ posts, totalPosts, lastMonthPosts });
+        res.status(200).json({ posts, totalPosts, lastMonthPosts, count });
 
     } catch (error) {
         next(error)
