@@ -68,3 +68,16 @@ export const getPosts = async (req, res, next) => {
         next(error)
     }
 }
+
+export const deletePost = async (req, res, next) => {
+    if (req.user.id != req.params.userId) {
+        next(errorHandler(403, 'Access denied'))
+    }
+
+    try {
+        await Post.destroy({ where: { id: req.params.postId } });
+        res.status(200).json({ message: "success" });
+    } catch (error) {
+        next(error)
+    }
+}
