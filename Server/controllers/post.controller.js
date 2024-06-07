@@ -69,6 +69,27 @@ export const getPosts = async (req, res, next) => {
     }
 }
 
+export const updatePost = async (req, res, next) => {
+    if (req.user.id != req.params.userId) {
+        next(errorHandler(403, 'Access denied'));
+    }
+    const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '-');
+    const updateInfo = {
+        title: req.body.title,
+        coverImage: req.body.coverImage,
+        content: req.body.content,
+        category: req.body.category,
+        slug,
+        userId: req.body.userId
+    }
+    try {
+        await Post.update(updateInfo, { where: { id: req.body.id } });
+        res.status(200).json({ message: "successfully updated" });
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const deletePost = async (req, res, next) => {
     if (req.user.id != req.params.userId) {
         next(errorHandler(403, 'Access denied'))
