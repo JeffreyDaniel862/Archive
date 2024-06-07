@@ -6,6 +6,7 @@ import { FaTrash, FaEdit } from "react-icons/fa";
 import { Button, Modal } from 'flowbite-react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import queryClient from '../utils/http';
+import { Link } from 'react-router-dom';
 
 const DashPosts = () => {
     const { user } = useSelector(state => state.user);
@@ -72,10 +73,12 @@ const DashPosts = () => {
                                     <FaTrash />
                                     <span>Delete</span>
                                 </button>
-                                <button className='flex gap-3 justify-center items-center p-2 border-green-700 border-2 rounded-lg hover:bg-green-600 hover:text-white hover:-translate-y-1 transition-all'>
-                                    <FaEdit />
-                                    <span>Edit</span>
-                                </button>
+                                <Link to={`/update-post/${post.id}`}>
+                                    <button className='flex gap-3 justify-center items-center p-2 border-green-700 border-2 rounded-lg hover:bg-green-600 hover:text-white hover:-translate-y-1 transition-all'>
+                                        <FaEdit />
+                                        <span>Edit</span>
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     )}
