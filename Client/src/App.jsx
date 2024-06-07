@@ -9,6 +9,7 @@ import { userAction } from './components/Profile'
 import { postAction } from './components/PostForm'
 import CreatePost from './pages/CreatePost'
 import ErrorPage from './pages/Error'
+import EditPost, { postLoader } from './pages/EditPost'
 
 function App() {
   const router = createBrowserRouter([
@@ -23,7 +24,7 @@ function App() {
         { path: 'about', element: <About /> },
         { path: 'dashboard', element: <Dashboard />, action: userAction },
         { path: 'create-post', element: <CreatePost />, action: postAction },
-        
+        { path: 'update-post/:id', element: <EditPost />, loader: postLoader, action: postAction }
       ]
     },
   ]);
