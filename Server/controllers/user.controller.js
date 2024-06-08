@@ -39,3 +39,14 @@ export const deleteUser = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getUser = async (req, res, next) => {
+
+    try {
+        const userInfo = await User.findOne({ where: { id: req.params.userId } })
+        const user = {username: userInfo.username, email: userInfo.email, displayPicture: userInfo.displayPictureURL}
+        res.status(200).json(user);
+    } catch (error) {
+        next(error)
+    }
+}
