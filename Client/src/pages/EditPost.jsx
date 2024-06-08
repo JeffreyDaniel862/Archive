@@ -10,8 +10,15 @@ export default function EditPost() {
 }
 
 export const postLoader = async ({ request, params }) => {
+    let URL = `/jd/post/getposts?`
+    if (params.id) {
+        URL = `/jd/post/getposts?id=${params.id}`
+    }
+    if (params.slug) {
+        URL = `/jd/post/getposts?slug=${params.slug}`
+    }
     try {
-        const response = await fetch(`/jd/post/getposts?id=${params.id}`);
+        const response = await fetch(URL);
         const resData = await response.json();
         if (!response.ok) {
             throw json({ message: resData.message || "Unable to fetch post" }, { status: resData.status || 500 });
