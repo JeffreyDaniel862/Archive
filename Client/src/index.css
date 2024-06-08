@@ -9,3 +9,73 @@ body{
 .ql-editor{
     font-size: 1.05rem;
 }
+
+.post-content p{
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+}
+
+.post-content h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: sans-serif;
+    margin: 1.5rem 0;
+}
+
+.post-content h2{
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin: 1.5rem 0;
+}
+
+.post-content a{
+    color: rgb(73, 149, 199);
+    text-decoration: none;
+}
+
+.post-content a:hover{
+    text-decoration: underline;
+}
+
+.dark .post-content a{
+    color: lightcoral;
+}
+
+.post-content blockquote {
+    background: #f9f9f9;
+    border-radius: 10%;
+    border-left: 10px solid #0af2f2;
+    margin: 1.5em 10px;
+    padding: 0.5em 20px;
+    quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+.post-content blockquote:before {
+    color: #0dc5dd;
+    content: open-quote;
+    font-size: 4em;
+    line-height: 0.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.4em;
+}
+
+.post-content blockquote p {
+    display: inline;
+}
+
+.post-content img{
+    margin: auto;
+    border-radius: 8%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.post-content ul {
+    list-style: inherit;
+    padding: 0 1.5rem;
+}
+
+.post-content ol {
+    list-style: decimal;
+    padding: 0 1.5rem;
+}
