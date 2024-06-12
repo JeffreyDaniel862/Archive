@@ -61,10 +61,9 @@ const DashPosts = () => {
     }
 
     return (
-        <div className='flex flex-col items-center p-2'>
-            Dash Posts.
-            {
-                postData && <div className='flex flex-col md:flex-row md:flex-wrap gap-6 p-3'>
+        postData?.length > 0 ?
+            <div className='flex flex-col items-center p-2'>
+                <div className='flex flex-col md:flex-row md:flex-wrap gap-6 p-3'>
                     {postData.map(post =>
                         <div className='flex flex-col gap-3 p-2 rounded-lg h-[410px]' key={post.id} >
                             <Card post={post} />
@@ -83,28 +82,34 @@ const DashPosts = () => {
                         </div>
                     )}
                 </div>
-            }
-            <Modal show={showModal} popup onClose={() => setShowModal(false)} size={'md'}>
-                <Modal.Header />
-                <Modal.Body>
-                    <div className="text-center">
-                        <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mx-auto mb-3" />
-                        <h3 className="text-lg font-semibold">
-                            Are you sure to delete this Post? This action cannot be undone.
-                        </h3>
-                        <div className='py-2 flex flex-col gap-2 items-center'>
-                            <p className='text-slate-500 font-medium'>To proceed further type the following: <br /> <span className='text-lg font-bold text-slate-400'>"{preDeleteInfo.slug}"</span> </p>
-                            <input autoFocus onChange={(e) => setPreDeleteInfo(prev => ({ ...prev, confirm: e.target.value == prev.slug }))} type="text" placeholder='Type here ...' />
+                <Modal show={showModal} popup onClose={() => setShowModal(false)} size={'md'}>
+                    <Modal.Header />
+                    <Modal.Body>
+                        <div className="text-center">
+                            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mx-auto mb-3" />
+                            <h3 className="text-lg font-semibold">
+                                Are you sure to delete this Post? This action cannot be undone.
+                            </h3>
+                            <div className='py-2 flex flex-col gap-2 items-center'>
+                                <p className='text-slate-500 font-medium'>To proceed further type the following: <br /> <span className='text-lg font-bold text-slate-400'>"{preDeleteInfo.slug}"</span> </p>
+                                <input autoFocus onChange={(e) => setPreDeleteInfo(prev => ({ ...prev, confirm: e.target.value == prev.slug }))} type="text" placeholder='Type here ...' />
+                            </div>
+                            <div className="flex justify-evenly mt-3">
+                                <Button disabled={!preDeleteInfo.confirm} className="bg-red-600 text-black hover:bg-red-700" onClick={handleDeletePost}>Yes, Delete</Button>
+                                <Button onClick={() => setShowModal(false)} outline>Cancel</Button>
+                            </div>
                         </div>
-                        <div className="flex justify-evenly mt-3">
-                            <Button disabled={!preDeleteInfo.confirm} className="bg-red-600 text-black hover:bg-red-700" onClick={handleDeletePost}>Yes, Delete</Button>
-                            <Button onClick={() => setShowModal(false)} outline>Cancel</Button>
-                        </div>
-                    </div>
-                </Modal.Body>
-            </Modal>
-            {showMore && <Button onClick={handleShowMore}>Show more ...</Button>}
-        </div>
+                    </Modal.Body>
+                </Modal>
+                {showMore && <Button onClick={handleShowMore}>Show more ...</Button>}
+            </div>
+            :
+            <div className='max-w-2xl max-h-60 mx-auto mt-10 flex flex-col items-center justify-center gap-6 w-full p-3 border border-sky-700 dark:border-sky-400 rounded-md'>
+                <p>You have not published any writs.</p>
+                <Link to={'/create-post'}>
+                    <Button outline pill>Create post</Button>
+                </Link>
+            </div>
     )
 }
 
