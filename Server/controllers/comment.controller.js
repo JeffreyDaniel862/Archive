@@ -13,3 +13,13 @@ export const createComment = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getComments = async (req, res, next) => {
+    const postId = req.params.postId;
+    try {
+        const { count, rows: comments } = await Comment.findAndCountAll({ where: { postId }, order: [['createdAt', 'desc']] });
+        res.status(200).json({ count, comments });
+    } catch (error) {
+        next(error);
+    }
+}
