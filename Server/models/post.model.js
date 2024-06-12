@@ -31,6 +31,6 @@ const Post = db.define('post', {
 })();
 
 User.hasMany(Post, { onDelete: 'cascade' });
-Post.belongsTo(User);
+Post.belongsTo(User, { foreignKey: { allowNull: false } });
 
 export default Post;
