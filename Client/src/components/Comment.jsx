@@ -1,13 +1,25 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Alert, Button, Textarea } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
+import queryClient from '../utils/http';
+import CommentCard from './CommentCard';
+
 export default function Comment({ postId }) {
     const { user } = useSelector(state => state.user);
     const [comment, setComment] = useState("");
+    const { data: commentData, isError, error } = useQuery({
+        queryFn: () => getComments(postId),
+        queryKey: ['postComments'],
+        staleTime: 5000
+    });
+    
     const { mutate, data } = useMutation({
-        mutationFn: postComment
+        mutationFn: postComment,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['postComments'] });
+        }
     });
 
     const handleSubmit = (event) => {
@@ -40,9 +52,18 @@ export default function Comment({ postId }) {
                     <Button type='submit' outline pill className='bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300'>Submit</Button>
                 </div>
                 {
-                   data && data?.statusCode != 200 && <Alert className='mt-5' color={'failure'}>{data?.message || 'Unable to post comment'}</Alert>
+                    data && data?.statusCode != 200 && <Alert className='mt-5' color={'failure'}>{data?.message || 'Unable to post comment'}</Alert>
                 }
             </form>
+            {
+                commentData && commentData?.comments.length === 0 ?
+                    <p className='mt-5'>No comments yet !! you can be the first one to comment.</p>
+                    :
+                    <div className='mt-5'>
+                        <p className='text-lg font-semibold'>Comments <span className='ml-3 border-2 p-1 rounded-lg'>{commentData?.count}</span></p>
+                        {commentData?.comments.map(comment => <CommentCard key={comment.id} comment={comment} />)}
+                    </div>
+            }
         </>
         :
         <div className='flex gap-2 text-sky-500'>
@@ -64,5 +85,15 @@ export const postComment = async (comment) => {
         return resData;
     } catch (error) {
         return error;
+    }
+}
+
+export const getComments = async (postId) => {
+    try {
+        const response = await fetch(`/jd/comment/get-post-comments/${postId}`);
+        const resData = await response.json();
+        return resData;
+    } catch (error) {
+        return error
     }
 }

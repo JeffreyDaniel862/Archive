@@ -35,7 +35,7 @@ export default function PostPage() {
             <article className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{ __html: post && post.content }}>
 
             </article>
-            <div className="max-w-2xl mx-auto w-full p-3">
+            <div className="max-w-2xl mx-auto w-full p-3 border-t-2">
                 <Comment postId={post.id} />
             </div>
         </main>
