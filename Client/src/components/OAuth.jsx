@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../store/userSlice";
 
-export default function OAuth() {
+export default function OAuth({modal, modalClose}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleOAuth = async () => {
@@ -26,6 +26,10 @@ export default function OAuth() {
             const data = await response.json();
             if(response.ok){
                 dispatch(login(data));
+                if(modal){
+                    modalClose();
+                    return
+                }
                 navigate('/');
             }
         } catch (error) {
