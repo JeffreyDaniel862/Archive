@@ -30,7 +30,7 @@ export default function CommentCard({ comment }) {
                     <div className="flex gap-6">
                         <FaThumbsUp className="text-gray-400 hover:text-blue-500 hover:scale-150 transition-all delay-150" />
                         {
-                            user.id == comment.userId && <div className="flex gap-4">
+                            user?.id == comment.userId && <div className="flex gap-4">
                                 <FaEdit className="text-green-700 dark:text-green-400 hover:scale-150 transition-all delay-150" />
                                 <FaTrash className="text-red-700 dark:text-red-500 hover:scale-150 transition-all delay-150" />
                             </div>

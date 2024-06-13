@@ -14,7 +14,7 @@ export default function Comment({ postId }) {
         queryKey: ['postComments'],
         staleTime: 5000
     });
-    
+
     const { mutate, data } = useMutation({
         mutationFn: postComment,
         onSuccess: () => {
@@ -33,43 +33,49 @@ export default function Comment({ postId }) {
         }
     }, [data]);
 
-    return user ?
-        <>
-            <div className='flex gap-2 items-center text-sm text-gray-400'>
-                <p> Signed in as :</p>
-                <img className='h-7 w-7 rounded-full' src={user.displayPicture} alt="display picture" />
-                <Link className='text-sky-600 dark:text-sky-400' to={'/dashboard?tab=profile'}>@{user.username}</Link>
-            </div>
-            <form onSubmit={handleSubmit} className='mt-5 border border-sky-300 dark:border-sky-700 p-3 rounded-md'>
-                <Textarea
-                    placeholder='Add comments about this post ...'
-                    onChange={(e) => setComment(e.target.value)}
-                    value={comment}
-                    maxLength={200}
-                />
-                <div className='mt-4 flex justify-between items-center'>
-                    <p className='text-gray-400'>{200 - comment.length} characters remaining.</p>
-                    <Button type='submit' outline pill className='bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300'>Submit</Button>
-                </div>
-                {
-                    data && data?.statusCode != 200 && <Alert className='mt-5' color={'failure'}>{data?.message || 'Unable to post comment'}</Alert>
-                }
-            </form>
+    return (
+        <div>
+            {
+                user ?
+                    <>
+                        <div className='flex gap-2 items-center text-sm text-gray-400'>
+                            <p> Signed in as :</p>
+                            <img className='h-7 w-7 rounded-full' src={user.displayPicture} alt="display picture" />
+                            <Link className='text-sky-600 dark:text-sky-400' to={'/dashboard?tab=profile'}>@{user.username}</Link>
+                        </div>
+                        <form onSubmit={handleSubmit} className='mt-5 border border-sky-300 dark:border-sky-700 p-3 rounded-md'>
+                            <Textarea
+                                placeholder='Add comments about this post ...'
+                                onChange={(e) => setComment(e.target.value)}
+                                value={comment}
+                                maxLength={200}
+                            />
+                            <div className='mt-4 flex justify-between items-center'>
+                                <p className='text-gray-400'>{200 - comment.length} characters remaining.</p>
+                                <Button type='submit' outline pill className='bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300'>Submit</Button>
+                            </div>
+                            {
+                                data && data?.statusCode != 200 && <Alert className='mt-5' color={'failure'}>{data?.message || 'Unable to post comment'}</Alert>
+                            }
+                        </form>
+                    </>
+                    :
+                    <div className='flex gap-2 text-sky-500'>
+                        <p>Please login to comment --&gt;</p>
+                        <Link className='hover:underline' to={'/sign-in'}>Sign-in</Link>
+                    </div>
+            }
             {
                 commentData && commentData?.comments.length === 0 ?
                     <p className='mt-5'>No comments yet !! you can be the first one to comment.</p>
                     :
                     <div className='mt-5'>
-                        <p className='text-lg font-semibold'>Comments <span className='ml-3 border-2 p-1 rounded-lg'>{commentData?.count}</span></p>
+                        <p className='text-lg font-semibold'>Comments <span className='ml-3 border-2 px-3 text-sm py-1 rounded-lg'>{commentData?.count}</span></p>
                         {commentData?.comments.map(comment => <CommentCard key={comment.id} comment={comment} />)}
                     </div>
             }
-        </>
-        :
-        <div className='flex gap-2 text-sky-500'>
-            <p>Please login to comment --&gt;</p>
-            <Link className='hover:underline' to={'/sign-in'}>Sign-in</Link>
         </div>
+    )
 }
 
 export const postComment = async (comment) => {
