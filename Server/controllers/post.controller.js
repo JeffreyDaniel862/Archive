@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import Post from "../models/post.model.js";
 import { errorHandler } from "../utils/errorHandler.js";
 import Like, { } from '../models/like.model.js';
+import savedPost from "../models/savedPost.model.js";
 
 export const createPost = async (req, res, next) => {
     if (req.user.id != req.params.id) {
@@ -105,18 +106,19 @@ export const deletePost = async (req, res, next) => {
 }
 
 export const likePost = async (req, res, next) => {
-    if (req.user.id != req.body.userId) {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    if (req.user.id != userId) {
         next(errorHandler(403, 'Access denied'));
     }
     try {
-        const alreadyLiked = await Like.findOne({ where: { postId: req.params.postId, userId: req.body.userId } });
+        const alreadyLiked = await Like.findOne({ where: { postId, userId } });
         if (alreadyLiked) {
             await Like.destroy({ where: { id: alreadyLiked.dataValues.id } })
-            return res.status(200).json({ message: 'UnLiked' });
         } else {
-            await Like.create({ postId: req.params.postId, userId: req.body.userId });
-            return res.status(200).json({ message: 'Liked' });
+            await Like.create({ postId, userId });
         }
+        res.status(200).json({ message: 'success' });
     } catch (error) {
         next(error);
     }
@@ -124,8 +126,27 @@ export const likePost = async (req, res, next) => {
 
 export const likesOfPost = async (req, res, next) => {
     try {
-        const {count, rows: likedUsers} = await Like.findAndCountAll({ where: { postId: req.params.postId } });
-        res.status(200).json({count, likedUsers});
+        const { count, rows: likedUsers } = await Like.findAndCountAll({ where: { postId: req.params.postId } });
+        res.status(200).json({ count, likedUsers });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const savePost = async (req, res, next) => {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    if (req.user.id != userId) {
+        next(errorHandler(403, 'Access denied'));
+    }
+    try {
+        const alreadySaved = await savedPost.findOne({ where: { postId, userId } });
+        if (alreadySaved) {
+            await savedPost.destroy({ where: { id: alreadySaved.dataValues.id } });
+        } else {
+            await savedPost.create({ postId, userId });
+        }
+        res.status(200).json({ message: 'success' });
     } catch (error) {
         next(error);
     }
