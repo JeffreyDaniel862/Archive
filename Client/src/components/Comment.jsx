@@ -29,6 +29,13 @@ export default function Comment({ postId }) {
         }
     })
 
+    const { mutate: deleteMutation } = useMutation({
+        mutationFn: deleteComment,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['postComments'] });
+        }
+    })
+
     const handleSubmit = (event) => {
         event.preventDefault();
         mutate({ userId: user.id, postId, content: comment });
@@ -78,7 +85,7 @@ export default function Comment({ postId }) {
                     :
                     <div className='mt-5'>
                         <p className='text-lg font-semibold'>Comments <span className='ml-3 border-2 px-3 text-sm py-1 rounded-lg'>{commentData?.count}</span></p>
-                        {commentData?.comments.map(comment => <CommentCard key={comment.id} comment={comment} onUpdate={updateMutation}/>)}
+                        {commentData?.comments.map(comment => <CommentCard key={comment.id} comment={comment} onUpdate={updateMutation} onDelete={deleteMutation} />)}
                     </div>
             }
         </div>
@@ -120,6 +127,19 @@ export const updateComment = async (params) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ userId, content })
+        });
+        const resData = await response.json();
+        return resData;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteComment = async (params) => {
+    const { userId, commentId } = params;
+    try {
+        const response = await fetch(`/jd/comment/delete/${userId}/${commentId}`, {
+            method: "DELETE"
         });
         const resData = await response.json();
         return resData;

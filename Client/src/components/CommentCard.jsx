@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { FaTrash, FaEdit, FaThumbsUp } from "react-icons/fa";
 import { Button, Textarea } from "flowbite-react";
 
-export default function CommentCard({ comment, onUpdate }) {
+export default function CommentCard({ comment, onUpdate, onDelete }) {
     const { user } = useSelector(state => state.user);
     const [author, setAuthor] = useState();
     const [isEditing, setIsEditing] = useState(false);
@@ -61,7 +61,7 @@ export default function CommentCard({ comment, onUpdate }) {
                             {
                                 user?.id == comment.userId && <div className="flex gap-4">
                                     <FaEdit onClick={() => setIsEditing(true)} className="text-green-700 dark:text-green-400 hover:scale-150 transition-all delay-150" />
-                                    <FaTrash className="text-red-700 dark:text-red-500 hover:scale-150 transition-all delay-150" />
+                                    <FaTrash onClick={() => { onDelete({ userId: comment?.userId, commentId: comment?.id }) }} className="text-red-700 dark:text-red-500 hover:scale-150 transition-all delay-150" />
                                 </div>
                             }
                         </div>
