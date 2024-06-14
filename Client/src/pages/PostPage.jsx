@@ -116,7 +116,7 @@ export default function PostPage() {
                         <p className="flex gap-2 items-center">
                             {
                                 liked ?
-                                    <FaHeart className="text-red-700 hover:scale-150 transition-all delay-150" title="liked" onClick={handleLike} />
+                                    <FaHeart className="text-red-700 hover:scale-150 transition-all delay-150 customAnime" title="liked" onClick={handleLike} />
                                     :
                                     <FaRegHeart className="hover:scale-150 transition-all delay-150" title="like" onClick={user ? handleLike : () => setShowModal(true)} />
                             }
