@@ -26,7 +26,7 @@ export default function PostPage() {
         queryKey: ['isSaved'],
         queryFn: () => getSavedPost({ postId: post?.id, userId: user?.id })
     })
-
+    
     const { mutate: saveMutation } = useMutation({
         mutationFn: savePost,
         onSuccess: () => {
@@ -178,6 +178,9 @@ export const savePost = async (params) => {
 export const getSavedPost = async (params) => {
     if (params.postId) {
         const { postId, userId } = params;
+        if (!userId) {
+            return false
+        }
         const response = await fetch(`/jd/user/getUserSavedPost/${userId}?postId=${postId}`);
         const resData = await response.json();
         if (resData.count == 0) {
