@@ -1,3 +1,4 @@
+import savedPost from "../models/savedPost.model.js";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/errorHandler.js"
 import bcryptjs from 'bcryptjs';
@@ -41,12 +42,29 @@ export const deleteUser = async (req, res, next) => {
 }
 
 export const getUser = async (req, res, next) => {
-
     try {
         const userInfo = await User.findOne({ where: { id: req.params.userId } })
-        const user = {username: userInfo.username, email: userInfo.email, displayPicture: userInfo.displayPictureURL}
+        const user = { username: userInfo.username, email: userInfo.email, displayPicture: userInfo.displayPictureURL }
         res.status(200).json(user);
     } catch (error) {
         next(error)
+    }
+}
+
+export const getUserSavedPost = async (req, res, next) => {
+    const userId = req.params.userId;
+    if (req.user.id != userId) {
+        next(errorHandler(403, 'Access denied'));
+    }
+    try {
+        const { count, rows: userSavedPost } = await savedPost.findAndCountAll({
+            where: {
+                userId,
+                ...(req.query.postId && { postId: req.query.postId })
+            }
+        });
+        res.status(200).json({ count, userSavedPost });
+    } catch (error) {
+        next(error);
     }
 }

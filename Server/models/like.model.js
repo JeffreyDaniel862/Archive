@@ -22,6 +22,10 @@ const Like = db.define('like', {
     }
 });
 
+(async () => {
+    await db.sync();
+})();
+
 User.hasMany(Like, { onDelete: 'cascade' });
 Post.hasMany(Like, { onDelete: 'cascade' });
 
