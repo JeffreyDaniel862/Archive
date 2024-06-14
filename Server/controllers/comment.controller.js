@@ -42,3 +42,21 @@ export const updateComment = async (req, res, next) => {
         next(error);
     }
 }
+
+export const deleteComment = async (req, res, next) => {
+    const userId = req.params.userId;
+    const id = req.params.commentId;
+    if (req.user.id != userId) {
+        return next(errorHandler(403, 'Access denied'));
+    }
+    try {
+        const existingComment = await Comment.findOne({ where: { id } });
+        if (!existingComment) {
+            throw errorHandler(404, 'comment not found');
+        }
+        await Comment.destroy({ where: { id } });
+        res.status(200).json({ message: "deleted successfully" });
+    } catch (error) {
+        next(error);
+    }
+}
