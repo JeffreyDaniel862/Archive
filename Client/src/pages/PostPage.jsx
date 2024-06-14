@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { Button } from 'flowbite-react'
 import { useEffect, useState } from "react";
 import Comment from "../components/Comment";
-import { FaCheck, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
+import { FaBookmark, FaCheck, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 import { useSelector } from "react-redux";
 import AuthModal from "../components/AuthModal";
@@ -17,12 +17,24 @@ export default function PostPage() {
     const [liked, setLiked] = useState(false);
     const { user } = useSelector(state => state.user);
 
-    const { data } = useQuery({
+    const { data: likedData } = useQuery({
         queryKey: ['likesOfPost'],
         queryFn: () => getLikes(post?.id)
     });
 
-    const { mutate } = useMutation({
+    const { data: isSaved } = useQuery({
+        queryKey: ['isSaved'],
+        queryFn: () => getSavedPost({ postId: post?.id, userId: user?.id })
+    })
+
+    const { mutate: saveMutation } = useMutation({
+        mutationFn: savePost,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['isSaved'] });
+        }
+    })
+
+    const { mutate: likeMutation } = useMutation({
         mutationFn: likePost,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['likesOfPost'] });
@@ -30,15 +42,15 @@ export default function PostPage() {
     })
 
     useEffect(() => {
-        if (data) {
-            const ans = data?.likedUsers.findIndex(likedUser => likedUser.userId == user?.id);
+        if (likedData) {
+            const ans = likedData?.likedUsers.findIndex(likedUser => likedUser.userId == user?.id);
             if (ans != -1) {
                 setLiked(true);
             } else {
                 setLiked(false)
             }
         }
-    }, [data])
+    }, [likedData, user])
 
     useEffect(() => {
         if (post) {
@@ -70,7 +82,11 @@ export default function PostPage() {
     }
 
     const handleLike = () => {
-        mutate({ postId: post?.id, userId: user?.id })
+        likeMutation({ postId: post?.id, userId: user?.id });
+    }
+
+    const handleSavePost = () => {
+        saveMutation({ postId: post?.id, userId: user?.id });
     }
 
     const closeModal = () => {
@@ -100,13 +116,18 @@ export default function PostPage() {
                         <p className="flex gap-2 items-center">
                             {
                                 liked ?
-                                    <FaHeart className="text-red-700" title="like" onClick={handleLike} />
+                                    <FaHeart className="text-red-700 hover:scale-150 transition-all delay-150" title="liked" onClick={handleLike} />
                                     :
-                                    <FaRegHeart title="like" onClick={user ? handleLike : () => setShowModal(true)} />
+                                    <FaRegHeart className="hover:scale-150 transition-all delay-150" title="like" onClick={user ? handleLike : () => setShowModal(true)} />
                             }
-                            <span className="text-sm font-semibold">{data && data?.count}</span>
+                            <span className="text-sm font-semibold">{likedData && likedData?.count}</span>
                         </p>
-                        <FaRegBookmark title="save" onClick={user ? () => { console.log("clicked") } : () => setShowModal(true)} />
+                        {
+                            isSaved ?
+                                <FaBookmark className="text-green-700 dark:text-green-400 hover:scale-125 transition-all delay-150" title="saved" onClick={handleSavePost} />
+                                :
+                                <FaRegBookmark className="hover:text-green-700 hover:scale-125 transition-all delay-150" title="save" onClick={user ? handleSavePost : () => setShowModal(true)} />
+                        }
                         {copy ? <FaCheck className="text-green-600 dark:text-green-400 animate-pulse" /> : <MdContentCopy title="copy" onClick={handleCopy} />}
                     </div>
                 </div>
@@ -139,4 +160,34 @@ export const likePost = async (params) => {
     });
     const resData = await response.json();
     return resData;
+}
+
+export const savePost = async (params) => {
+    const { postId, userId } = params;
+    const response = await fetch(`/jd/post/save-post/${postId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userId })
+    });
+    const resData = await response.json();
+    return resData;
+}
+
+export const getSavedPost = async (params) => {
+    if (params.postId) {
+        const { postId, userId } = params;
+        const response = await fetch(`/jd/user/getUserSavedPost/${userId}?postId=${postId}`);
+        const resData = await response.json();
+        if (resData.count == 0) {
+            return false
+        } else {
+            return true
+        }
+    } else {
+        const response = await fetch(`/jd/user/getUserSavedPost/${params}`);
+        const resData = await response.json();
+        return resData
+    }
 }
