@@ -65,7 +65,7 @@ const DashPosts = () => {
             <div className='flex flex-col items-center p-2'>
                 <div className='flex flex-col md:flex-row md:flex-wrap gap-6 p-3'>
                     {postData.map(post =>
-                        <div className='flex flex-col gap-3 p-2 rounded-lg h-[410px]' key={post.id} >
+                        <div className='flex flex-col gap-3  rounded-lg h-[410px]' key={post.id} >
                             <Card post={post} />
                             <div className='flex justify-around'>
                                 <button onClick={() => handleModal(post)} className='flex gap-3 justify-center items-center p-2 border-red-700 border-2 rounded-lg hover:bg-red-800 hover:text-white hover:-translate-y-1 transition-all'>
