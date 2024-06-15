@@ -62,7 +62,8 @@ const DashPosts = () => {
 
     return (
         postData?.length > 0 ?
-            <div className='flex flex-col items-center p-2'>
+            <div className='flex flex-col items-center p-2 gap-6 mb-3'>
+                <h2 className='my-5 font-bold text-xl md:text-3xl text-center border-b-2 border-gray-400 pb-1'>Your Archive</h2>
                 <div className='flex flex-col md:flex-row md:flex-wrap gap-6 p-3'>
                     {postData.map(post =>
                         <div className='flex flex-col gap-3  rounded-lg h-[410px]' key={post.id} >
@@ -82,6 +83,9 @@ const DashPosts = () => {
                         </div>
                     )}
                 </div>
+                <Link to={'/create-post'} className='w-2/3'>
+                    <Button pill outline className="w-full bg-gradient-to-r from-blue-600 via-sky-500 to-sky-300">Create Post</Button>
+                </Link>
                 <Modal show={showModal} popup onClose={() => setShowModal(false)} size={'md'}>
                     <Modal.Header />
                     <Modal.Body>
