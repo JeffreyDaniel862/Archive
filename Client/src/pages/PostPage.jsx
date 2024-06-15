@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { Button } from 'flowbite-react'
 import { useEffect, useState } from "react";
 import Comment from "../components/Comment";
-import { FaBookmark, FaCheck, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
+import { FaBookmark, FaCheck, FaHeart, FaRegBookmark, FaRegEye, FaRegHeart } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 import { useSelector } from "react-redux";
 import AuthModal from "../components/AuthModal";
@@ -64,6 +64,16 @@ export default function PostPage() {
                     setAuthor(resData)
                 }
             }
+            const updateViews = async () => {
+                const response = await fetch(`/jd/post/update-views/${post?.id}`, {
+                    method: "PATCH"
+                });
+                const resData = await response.json();
+                if (response.ok) {
+                    console.log(resData);
+                }
+            }
+            updateViews();
             fetchUser();
         }
         const fetchMorePosts = async () => {
@@ -123,8 +133,12 @@ export default function PostPage() {
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-6 text-lg py-3 text-gray-500 dark:text-gray-400">
-                        <p className="flex gap-2 items-center">
+                    <div className="flex items-center self-end gap-6 text-lg py-3 text-gray-500 dark:text-gray-400">
+                        <div className="flex gap-3 items-center">
+                            <FaRegEye className="text-xl  text-sky-600 dark:text-sky-400" />
+                            <span className="text-sm italic">{post && post.View.views} views</span>
+                        </div>
+                        <p className="flex gap-3 items-center">
                             {
                                 liked ?
                                     <FaHeart className="text-red-700 hover:scale-150 transition-all delay-150 customAnime" title="liked" onClick={handleLike} />
@@ -145,16 +159,21 @@ export default function PostPage() {
                 <article className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{ __html: post && post.content }}>
 
                 </article>
-                <div className="max-w-2xl mx-auto w-full p-3 border-t-2">
+                <div className="max-w-2xl mx-auto w-full p-3 border-y-2 border-gray-400">
                     <Comment postId={post.id} />
                 </div>
                 {
                     morePosts &&
                     <div className="flex flex-col justify-center items-center border-b-2 p-2 border-gray-400">
-                        <h1 className="text-start self-start border-b-2 pb-2 border-gray-400 text-gray-600 dark:text-gray-400">From <span className="font-semibold text-white">{author?.username}'s</span> Archive</h1>
-                        <div className="flex flex-wrap gap-5 my-3">
+                        <h1 className="text-start text-lg border-b-2 pb-2 border-gray-400 text-gray-600 dark:text-gray-400">From <span className="font-semibold text-white">{author?.username}'s</span> Archive</h1>
+                        <div className="flex flex-wrap justify-center gap-5 my-3">
                             {
-                                morePosts.map(post => <Card key={post.id} post={post} />)
+                                morePosts.map(userPost => {
+                                    if(userPost.id == post.id){
+                                        return null;
+                                    }
+                                    return <Card key={userPost.id} post={userPost} />
+                                })
                             }
                         </div>
                     </div>
