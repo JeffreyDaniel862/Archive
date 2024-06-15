@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 export default function Card({ post }) {
   return (
-    <div className='group relative w-full border border-teal-500 hover:border-2 h-[400px] overflow-hidden rounded-lg sm:w-[330px] transition-all'>
+    <div className='group relative w-full border border-teal-500 hover:border-2 h-[380px] overflow-hidden rounded-lg sm:w-[330px] transition-all'>
       <Link to={`/post-view/${post.slug}`}>
         <img
           src={post.coverImage}
           alt='post cover'
-          className='h-[260px] w-full  object-cover group-hover:h-[190px] transition-all duration-300 z-20'
+          className='h-[260px] w-full  object-cover group-hover:h-[210px] transition-all duration-300 z-20'
         />
       </Link>
       <div className='p-3 flex flex-col gap-2'>

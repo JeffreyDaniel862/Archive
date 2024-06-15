@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import AuthModal from "../components/AuthModal";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import queryClient from "../utils/http";
+import Card from "../components/Card";
 
 export default function PostPage() {
     const post = useLoaderData();
@@ -16,6 +17,7 @@ export default function PostPage() {
     const [showModal, setShowModal] = useState(false);
     const [liked, setLiked] = useState(false);
     const { user } = useSelector(state => state.user);
+    const [morePosts, setMorePosts] = useState();
 
     const { data: likedData } = useQuery({
         queryKey: ['likesOfPost'],
@@ -26,7 +28,7 @@ export default function PostPage() {
         queryKey: ['isSaved'],
         queryFn: () => getSavedPost({ postId: post?.id, userId: user?.id })
     })
-    
+
     const { mutate: saveMutation } = useMutation({
         mutationFn: savePost,
         onSuccess: () => {
@@ -39,7 +41,7 @@ export default function PostPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['likesOfPost'] });
         }
-    })
+    });
 
     useEffect(() => {
         if (likedData) {
@@ -50,6 +52,7 @@ export default function PostPage() {
                 setLiked(false)
             }
         }
+        queryClient.invalidateQueries({ queryKey: ['isSaved'] });
     }, [likedData, user])
 
     useEffect(() => {
@@ -63,6 +66,14 @@ export default function PostPage() {
             }
             fetchUser();
         }
+        const fetchMorePosts = async () => {
+            const response = await fetch(`/jd/post/getposts?userId=${post.userId}&limit=${3}`);
+            const resData = await response.json();
+            if (response.ok) {
+                setMorePosts(resData.posts);
+            }
+        }
+        fetchMorePosts();
     }, [post]);
 
     const handleCopy = () => {
@@ -137,6 +148,17 @@ export default function PostPage() {
                 <div className="max-w-2xl mx-auto w-full p-3 border-t-2">
                     <Comment postId={post.id} />
                 </div>
+                {
+                    morePosts &&
+                    <div className="flex flex-col justify-center items-center border-b-2 p-2 border-gray-400">
+                        <h1 className="text-start self-start border-b-2 pb-2 border-gray-400 text-gray-600 dark:text-gray-400">From <span className="font-semibold text-white">{author?.username}'s</span> Archive</h1>
+                        <div className="flex flex-wrap gap-5 my-3">
+                            {
+                                morePosts.map(post => <Card key={post.id} post={post} />)
+                            }
+                        </div>
+                    </div>
+                }
             </main>
             <AuthModal showModal={showModal} onClose={closeModal} />
         </>
