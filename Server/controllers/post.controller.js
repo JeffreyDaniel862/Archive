@@ -1,8 +1,9 @@
 import { Sequelize } from "sequelize";
 import Post from "../models/post.model.js";
 import { errorHandler } from "../utils/errorHandler.js";
-import Like, { } from '../models/like.model.js';
+import Like from '../models/like.model.js';
 import savedPost from "../models/savedPost.model.js";
+import Views from "../models/views.model.js";
 
 export const createPost = async (req, res, next) => {
     if (req.user.id != req.params.id) {
@@ -15,7 +16,8 @@ export const createPost = async (req, res, next) => {
     const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '-');
     const post = { ...req.body, slug, userId: req.user.id }
     try {
-        await Post.create(post);
+        const createdPost = await Post.create(post);
+        await Views.create({ postId: createdPost.dataValues.id })
         res.status(201).json({ message: 'post created successfully' });
     } catch (error) {
         next(error)
@@ -42,7 +44,13 @@ export const getPosts = async (req, res, next) => {
             },
             offset: startIndex,
             limit,
-            order: [['createdAt', sortDirection]]
+            order: [['createdAt', sortDirection]],
+            include: [
+                {
+                    model: Views,
+                    attributes: ['views']
+                }
+            ]
         });
         const now = new Date();
         const aMonthAgo = new Date(
@@ -147,6 +155,21 @@ export const savePost = async (req, res, next) => {
             await savedPost.create({ postId, userId });
         }
         res.status(200).json({ message: 'success' });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const addViews = async (req, res, next) => {
+    const postId = req.params.postId;
+    try {
+        const existingViews = await Views.findOne({ where: { postId } });
+        if (!existingViews) {
+            await Views.create({ postId });
+            return res.status(200).json({ message: "views updated" });
+        }
+        await Views.update({ views: existingViews.dataValues.views + 1 }, { where: { id: existingViews.dataValues.id } });
+        res.status(200).json({ message: "views updated" });
     } catch (error) {
         next(error);
     }
