@@ -7,9 +7,9 @@ import '../env.js'
 export const signUp = async (req, res, next) => {
     const { username, email, password } = req.body;
     const hashedPassword = bcryptjs.hashSync(password, 10);
-
+    const validUsername = username.replace(/\s+/g, '')
     try {
-        const user = await User.create({ username, email, password: hashedPassword });
+        const user = await User.create({ username: validUsername, email, password: hashedPassword });
         res.json({ message: "SignUp Successfull", statusCode: 201 });
     } catch (error) {
         next(error);
@@ -44,7 +44,7 @@ export const Oauth = async (req, res, next) => {
         } else {
             const generatePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatePassword, 10);
-            const formattedUsername = username.toLowerCase().split(' ').join() + Math.random().toString(9).slice(-4);
+            const formattedUsername = username.toLowerCase().split(' ').join().replace(/\s+/g, '') + Math.random().toString(9).slice(-4);
             const user = await User.create({ username: formattedUsername, email, password: hashedPassword, displayPictureURL: photo });
             const token = jwt.sign({ id: user.id }, process.env.JWT_MAGIC);
             const userData = { id: user.id, username: user.username, email: user.email, createdAt: user.createdAt, updatedAt: user.updatedAt, displayPicture: user.displayPictureURL }

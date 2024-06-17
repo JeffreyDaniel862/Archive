@@ -11,9 +11,9 @@ export const updateUser = async (req, res, next) => {
     if (req.body.password) {
         req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
-
+    const updatedUser = { ...req.body, ...(req.body.username && { username: req.body.username.replace(/\s+/g, '') }) }
     try {
-        await User.update(req.body, { where: { id: req.params.userID } });
+        await User.update(updatedUser, { where: { id: req.params.userID } });
         const user = await User.findOne({ where: { id: req.params.userID } });
         res.json({
             id: user.id,
@@ -43,8 +43,13 @@ export const deleteUser = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
     try {
-        const userInfo = await User.findOne({ where: { id: req.params.userId } })
-        const user = { username: userInfo.username, email: userInfo.email, displayPicture: userInfo.displayPictureURL }
+        const userInfo = await User.findOne({
+            where: {
+                ...(req.query.userId && { id: req.query.userId }),
+                ...(req.query.username && { username: req.query.username })
+            }
+        })
+        const user = { id: userInfo.id, username: userInfo.username, email: userInfo.email, displayPicture: userInfo.displayPictureURL }
         res.status(200).json(user);
     } catch (error) {
         next(error)
