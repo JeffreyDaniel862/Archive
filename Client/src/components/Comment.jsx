@@ -81,7 +81,7 @@ export default function Comment({ postId }) {
             }
             {
                 commentData && commentData?.comments.length === 0 ?
-                    <p className='mt-5'>No comments yet !! you can be the first one to comment.</p>
+                    <p className='mt-5 text-sm italic text-gray-600 dark:text-gray-400'>No comments yet !! you can be the first one to comment.</p>
                     :
                     <div className='mt-5'>
                         <p className='text-lg font-semibold'>Comments <span className='ml-3 border-2 px-3 text-sm py-1 rounded-lg'>{commentData?.count}</span></p>
