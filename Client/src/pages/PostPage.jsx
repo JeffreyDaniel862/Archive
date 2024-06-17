@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Button } from 'flowbite-react'
 import { useEffect, useState } from "react";
 import Comment from "../components/Comment";
@@ -124,7 +124,9 @@ export default function PostPage() {
                     <div className="flex gap-2 md:gap-6 items-center py-3 text-sm italic">
                         <img className="h-6 w-6 md:h-10 md:w-10 rounded-full" src={author?.displayPicture} alt="Author's Picture" />
                         <div className="flex flex-col gap-2 md:gap-3 justify-center items-start">
-                            <p className="italic text-sm md:text-lg">{author?.username}</p>
+                            <Link to={`/@${author?.username}`} className="italic text-sm md:text-lg hover:underline">
+                                <p>{author?.username}</p>
+                            </Link>
                             <p className="text-gray-400">
                                 <span className="pr-1">Published On:</span>
                                 {new Date(post.createdAt).toDateString()}

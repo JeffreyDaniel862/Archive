@@ -11,6 +11,7 @@ import CreatePost from './pages/CreatePost'
 import ErrorPage from './pages/Error'
 import EditPost, { postLoader } from './pages/EditPost'
 import PostPage from './pages/PostPage'
+import UserProfile from './pages/Profile'
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +21,7 @@ function App() {
       errorElement: <ErrorPage />,
       children: [
         { index: true, element: <Home /> },
+        { path: ':id', element: <UserProfile /> },
         { path: 'sign-up', element: <SignUp />, action: signupAction },
         { path: 'sign-in', element: <SignIn />, action: signinAction },
         { path: 'about', element: <About /> },
