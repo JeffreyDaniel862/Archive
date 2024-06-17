@@ -8,13 +8,7 @@ const Comment = db.define('comment', {
         type: DataTypes.TEXT,
         allowNull: false
     }
-}, { tableName: 'comments', timestamps: true }, {
-    uniqueKeys: {
-        comment_unique: {
-            fields: ['postId', 'userId'],
-        },
-    },
-});
+}, { tableName: 'comments', timestamps: true });
 
 (async () => {
     await db.sync();
