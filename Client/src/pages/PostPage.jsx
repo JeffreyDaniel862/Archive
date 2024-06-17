@@ -163,13 +163,13 @@ export default function PostPage() {
                     <Comment postId={post.id} />
                 </div>
                 {
-                    morePosts &&
+                    morePosts?.length > 1 &&
                     <div className="flex flex-col justify-center items-center border-b-2 p-2 border-gray-400">
                         <h1 className="text-start text-lg border-b-2 pb-2 border-gray-400 text-gray-600 dark:text-gray-400">From <span className="font-semibold text-white">{author?.username}'s</span> Archive</h1>
                         <div className="flex flex-wrap justify-center gap-5 my-3">
                             {
                                 morePosts.map(userPost => {
-                                    if(userPost.id == post.id){
+                                    if (userPost.id == post.id) {
                                         return null;
                                     }
                                     return <Card key={userPost.id} post={userPost} />
