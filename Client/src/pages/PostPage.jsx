@@ -58,7 +58,7 @@ export default function PostPage() {
     useEffect(() => {
         if (post) {
             const fetchUser = async () => {
-                const response = await fetch(`/jd/user/getUser/${post.userId}`);
+                const response = await fetch(`/jd/user/getUser?userId=${post.userId}`);
                 const resData = await response.json();
                 if (response.ok) {
                     setAuthor(resData)

@@ -11,7 +11,7 @@ export default function CommentCard({ comment, onUpdate, onDelete }) {
     useEffect(() => {
         if (comment) {
             const fetchUser = async () => {
-                const response = await fetch(`/jd/user/getUser/${comment.userId}`);
+                const response = await fetch(`/jd/user/getUser?userId=${comment.userId}`);
                 const resData = await response.json();
                 if (response.ok) {
                     setAuthor(resData)
