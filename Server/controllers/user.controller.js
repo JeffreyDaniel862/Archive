@@ -1,7 +1,10 @@
+import { QueryTypes } from "sequelize";
+import Follower from "../models/follower.model.js";
 import savedPost from "../models/savedPost.model.js";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/errorHandler.js"
 import bcryptjs from 'bcryptjs';
+import { db } from "../config/database.js";
 
 export const updateUser = async (req, res, next) => {
     if (req.user.id != req.params.userID) {
@@ -69,6 +72,45 @@ export const getUserSavedPost = async (req, res, next) => {
             }
         });
         res.status(200).json({ count, userSavedPost });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const followUser = async (req, res, next) => {
+    if (req.user.id != req.params.userId) {
+        return next(errorHandler(403, "Access denied"));
+    }
+    try {
+        const alreadyFollowing = await Follower.findOne({
+            where: {
+                followerid: req.params.userId,
+                followingid: req.body.followingId
+            }
+        });
+        if (alreadyFollowing) {
+            await Follower.destroy({ where: { id: alreadyFollowing.dataValues.id } });
+        } else {
+            await Follower.create({ followerid: req.params.userId, followingid: req.body.followingId });
+        }
+        return res.status(200).json({ message: "Success" });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getUserFollowers = async (req, res, next) => {
+    try {
+        const followers = await db.query(
+            `SELECT followerid, followingid, "displayPictureURL", username 
+             FROM followers AS f 
+             INNER JOIN users AS u 
+             ON f.followerid = u.id 
+             WHERE  followingid=${req.params.userId}`,
+            {
+                type: QueryTypes.SELECT
+            })
+        res.status(200).json(followers);
     } catch (error) {
         next(error);
     }
