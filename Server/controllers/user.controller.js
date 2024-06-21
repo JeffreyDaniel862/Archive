@@ -115,3 +115,20 @@ export const getUserFollowers = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getUserFollowing = async (req, res, next) => {
+    try {
+        const following = await db.query(`
+            SELECT followerid, followingid, "displayPictureURL", username
+            FROM followers AS f
+            INNER JOIN users as u
+            ON f.followingid = u.id
+            WHERE followerid=${req.params.userId}`,
+            {
+                type: QueryTypes.SELECT
+            });
+        res.status(200).json(following);
+    } catch (error) {
+        next(error);
+    }
+}
