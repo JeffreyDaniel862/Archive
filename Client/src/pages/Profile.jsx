@@ -94,7 +94,9 @@ export default function UserProfile() {
                     <img className=" w-20 h-20 md:w-32 md:h-32 rounded-full shadow-md object-cover border-2 border-teal-400" src={author?.displayPicture} alt="author picture" />
                     <div>
                         <p className="md:my-4 italic text-lg md:text-3xl font-bold text-sky-600 dark:text-sky-500">{author?.username}</p>
-                        <p className="hover:underline cursor-pointer hover:text-green-500" onClick={() => setShowModal(true)}>{followerData?.length} followers</p>
+                        <p className="hover:underline cursor-pointer hover:text-green-500" onClick={() => setShowModal(true)}>
+                            {followerData?.length} {followerData?.length > 1 ? "Followers" : "Follower"}
+                        </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-10 mt-3 md:px-4">
@@ -111,10 +113,11 @@ export default function UserProfile() {
                             <FaCheck className="text-green-600 dark:text-green-400 animate-pulse" />
                     }
                 </div>
-                {/* <UserCard /> */}
             </div>
             <Modal show={showModal} onClose={closeModal}>
-                <Modal.Header />
+                <Modal.Header>
+                    Followers
+                </Modal.Header>
                 <Modal.Body>
                     {
                         followerData?.length > 0 ?
