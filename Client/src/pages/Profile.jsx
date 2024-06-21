@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import Card from '../components/Card';
 import { MdContentCopy } from 'react-icons/md';
 import { FaCheck } from "react-icons/fa";
-import UserCard from "../components/UserCard";
-import { Button, Modal } from "flowbite-react";
+import { Button } from "flowbite-react";
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSelector } from "react-redux";
 import queryClient, { } from '../utils/http'
+import UserModal from "../components/UserModal";
 
 export default function UserProfile() {
     const { id } = useParams();
@@ -17,6 +17,7 @@ export default function UserProfile() {
     const [copy, setCopy] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showFollowers, setShowFollowers] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -38,6 +39,12 @@ export default function UserProfile() {
 
     });
 
+    const { data: followingData } = useQuery({
+        queryKey: ['following'],
+        queryFn: () => fetchFollowing(author?.id),
+        enabled: Boolean(author?.id)
+    })
+
     const { mutate } = useMutation({
         mutationFn: followUser,
         onSuccess: () => {
@@ -57,7 +64,10 @@ export default function UserProfile() {
                 }
             }
             fetchUserPost();
-            queryClient.invalidateQueries({ queryKey: ['followers'] });
+            queryClient.invalidateQueries([
+                { queryKey: ['followers'] },
+                { queryKey: ['following'] }
+            ]);
         }
     }, [author]);
 
@@ -87,6 +97,15 @@ export default function UserProfile() {
         setShowModal(false);
     }
 
+    const handleShowModal = (name) => {
+        if(name === "followers"){
+            setShowFollowers(true);
+        } else {
+            setShowFollowers(false);
+        }
+        setShowModal(true);
+    }
+
     return (
         <div className="p-4 max-w-6xl mx-auto">
             <div className="flex flex-col items-start justify-center gap-3 p-4 border-b-2">
@@ -94,9 +113,14 @@ export default function UserProfile() {
                     <img className=" w-20 h-20 md:w-32 md:h-32 rounded-full shadow-md object-cover border-2 border-teal-400" src={author?.displayPicture} alt="author picture" />
                     <div>
                         <p className="md:my-4 italic text-lg md:text-3xl font-bold text-sky-600 dark:text-sky-500">{author?.username}</p>
-                        <p className="hover:underline cursor-pointer hover:text-green-500" onClick={() => setShowModal(true)}>
-                            {followerData?.length} {followerData?.length > 1 ? "Followers" : "Follower"}
-                        </p>
+                        <div className="flex gap-5">
+                            <p className="hover:underline cursor-pointer hover:text-green-500" onClick={() => handleShowModal("followers")}>
+                                {followerData?.length} {followerData?.length > 1 ? "Followers" : "Follower"}
+                            </p>
+                            <p className="hover:underline cursor-pointer hover:text-green-500" onClick={() => handleShowModal("following")}>
+                                {followingData?.length} following
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-10 mt-3 md:px-4">
@@ -114,23 +138,7 @@ export default function UserProfile() {
                     }
                 </div>
             </div>
-            <Modal show={showModal} onClose={closeModal}>
-                <Modal.Header>
-                    Followers
-                </Modal.Header>
-                <Modal.Body>
-                    {
-                        followerData?.length > 0 ?
-                            <div>
-                                {
-                                    followerData?.map(follower => <UserCard key={follower.username} onClose={closeModal} user={follower} />)
-                                }
-                            </div>
-                            :
-                            <p>No Followers</p>
-                    }
-                </Modal.Body>
-            </Modal>
+            <UserModal showModal={showModal} closeModal={closeModal} userArray={showFollowers ? followerData : followingData} title={showFollowers ? "Followers" : "Following"} />
             {
                 authorPost?.length >= 1 ?
                     <>
@@ -174,6 +182,17 @@ export const fetchFollowers = async (id) => {
         const response = await fetch(`/jd/user/get-followers/${id}`);
         const resData = await response.json();
         return resData
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
+export const fetchFollowing = async (id) => {
+    try {
+        const response = await fetch(`/jd/user/get-following/${id}`);
+        const resData = await response.json();
+        return resData;
     } catch (error) {
         console.error(error);
         return [];
