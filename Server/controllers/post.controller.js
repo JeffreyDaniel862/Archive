@@ -1,9 +1,10 @@
-import { Sequelize } from "sequelize";
+import { QueryTypes, Sequelize } from "sequelize";
 import Post from "../models/post.model.js";
 import { errorHandler } from "../utils/errorHandler.js";
 import Like from '../models/like.model.js';
 import savedPost from "../models/savedPost.model.js";
 import Views from "../models/views.model.js";
+import { db } from "../config/database.js";
 
 export const createPost = async (req, res, next) => {
     if (req.user.id != req.params.id) {
@@ -170,6 +171,30 @@ export const addViews = async (req, res, next) => {
         }
         await Views.update({ views: existingViews.dataValues.views + 1 }, { where: { id: existingViews.dataValues.id } });
         res.status(200).json({ message: "views updated" });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getPersonalizedFeed = async (req, res, next) => {
+    // fetch feeds from author the user follows order by desc in column createdAt if the authors don't have any feeds show some post in random.
+    try {
+        const feeds = await db.query(`
+            SELECT p.* FROM posts p
+            INNER JOIN followers f
+            ON f.followingid = p."userId"
+            WHERE followerid = ${req.params.userId}`,
+        {
+            type: QueryTypes.SELECT
+        });
+        if(feeds.length > 0){
+            return res.status(200).json(feeds);
+        }
+        const randomFeeds = await db.query(`SELECT * FROM posts ORDER BY "createdAt" DESC LIMIT 9`, {
+            type: QueryTypes.SELECT
+        });
+        console.log("random");
+        res.status(200).json(randomFeeds);
     } catch (error) {
         next(error);
     }
