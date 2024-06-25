@@ -4,6 +4,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import Profile from "../components/Profile";
 import SideTab from "../components/Sidebar";
 import DashPosts from "../components/DashPosts";
+import DashAnalytics from "../components/DashAnalytics";
 
 export default function Dashboard() {
     const { user } = useSelector(state => state.user);
@@ -24,6 +25,7 @@ export default function Dashboard() {
             </div>
             {tab === 'profile' && <Profile />}
             {tab === 'posts' && <DashPosts />}
+            {tab === 'analytics' && <DashAnalytics />}
         </div>
     )
 }
