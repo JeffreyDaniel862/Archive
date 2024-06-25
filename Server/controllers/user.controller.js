@@ -132,3 +132,35 @@ export const getUserFollowing = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getAnalytics = async (req, res, next) => {
+    console.log(req.user.id, req.params.userId);
+    if (req.user.id != req.params.userId) {
+        return next(errorHandler(403, "Access denied"));
+    }
+
+    try {
+        const userData = await db.query(`
+            SELECT COUNT(DISTINCT p.id) AS postCount, COALESCE(SUM(v.views), 0) AS viewsCount,
+            (SELECT COUNT(*) FROM followers flg WHERE flg.followerid = u.id) AS followingCount,
+            (SELECT COUNT(*) FROM followers flwr WHERE flwr.followingid = u.id) AS followerCount,
+            (SELECT COUNT(*) FROM posts p2 
+            INNER JOIN "Views" v2 ON v2."postId" = p2.id
+            WHERE p2."userId" = u.id 
+            AND p2."createdAt" >= DATE_TRUNC('month', CURRENT_TIMESTAMP) - INTERVAL '1 month'
+            AND p2."createdAt" < DATE_TRUNC('month', CURRENT_TIMESTAMP)
+            ) AS lastMonthPostCount
+            FROM users u
+            LEFT JOIN posts AS p ON p."userId" = u.id
+            LEFT JOIN "Views" AS v ON v."postId" = p.id
+            WHERE u.id = ${req.params.userId}
+            GROUP BY u.id`,
+            {
+                type: QueryTypes.SELECT
+            }
+        );
+        res.status(200).json(userData);
+    } catch (error) {
+        next(error)
+    }
+}
