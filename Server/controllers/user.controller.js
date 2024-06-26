@@ -100,13 +100,21 @@ export const followUser = async (req, res, next) => {
 }
 
 export const getUserFollowers = async (req, res, next) => {
-    try {
-        const followers = await db.query(
-            `SELECT followerid, followingid, "displayPictureURL", username 
+    let url = `SELECT followerid, "displayPictureURL", username 
              FROM followers AS f 
              INNER JOIN users AS u 
              ON f.followerid = u.id 
-             WHERE  followingid=${req.params.userId}`,
+             WHERE  followingid=${req.params.userId}`
+    if(req.query.limit){
+        url = `SELECT followerid, followingid, "displayPictureURL", username 
+             FROM followers AS f 
+             INNER JOIN users AS u 
+             ON f.followerid = u.id 
+             WHERE  followingid=${req.params.userId} LIMIT ${req.query.limit}`
+    }
+    try {
+        const followers = await db.query(
+            url,
             {
                 type: QueryTypes.SELECT
             })
@@ -117,13 +125,23 @@ export const getUserFollowers = async (req, res, next) => {
 }
 
 export const getUserFollowing = async (req, res, next) => {
-    try {
-        const following = await db.query(`
+    let url = `
             SELECT followerid, followingid, "displayPictureURL", username
             FROM followers AS f
             INNER JOIN users as u
             ON f.followingid = u.id
-            WHERE followerid=${req.params.userId}`,
+            WHERE followerid=${req.params.userId}`
+
+    if (req.query.limit) {
+        url = `SELECT followerid, followingid, "displayPictureURL", username
+            FROM followers AS f
+            INNER JOIN users as u
+            ON f.followingid = u.id
+            WHERE followerid=${req.params.userId} LIMIT ${req.query.limit}`
+    }
+
+    try {
+        const following = await db.query(url,
             {
                 type: QueryTypes.SELECT
             });
