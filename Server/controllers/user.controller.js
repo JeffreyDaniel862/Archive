@@ -204,3 +204,24 @@ export const getSavedPosts = async (req, res, next) => {
         console.error(error);
     }
 }
+
+export const getLikedPosts = async (req, res, next) => {
+    if (req.user.id != req.params.userId) {
+        return next(errorHandler(403, "Access denied"));
+    }
+    try {
+        const likedPost = await db.query(`
+            SELECT p.*, v.views FROM posts p
+            INNER JOIN "Views" v
+            ON v."postId" = p.id
+            INNER JOIN "likes" l
+            ON l."postId" = p.id
+            WHERE l."userId" = ${req.params.userId}`,
+            {
+                type: QueryTypes.SELECT
+            });
+        res.status(200).json(likedPost)
+    } catch (error) {
+        console.error(error);
+    }
+}
