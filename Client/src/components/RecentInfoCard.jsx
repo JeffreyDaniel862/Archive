@@ -10,7 +10,7 @@ export default function RecentInfoCard({ array, title, postInfo }) {
             <h4 className="text-lg border-b-2">{title}</h4>
             <div className="flex items-center justify-between">
                 <p>No {title} yet !</p>
-                <Button outline pill size={'sm'}>Create Post</Button>
+                {postInfo && <Button outline pill size={'sm'}>Create Post</Button>}
             </div>
         </div>
     }
