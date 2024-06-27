@@ -105,7 +105,7 @@ export const getUserFollowers = async (req, res, next) => {
              INNER JOIN users AS u 
              ON f.followerid = u.id 
              WHERE  followingid=${req.params.userId}`
-    if(req.query.limit){
+    if (req.query.limit) {
         url = `SELECT followerid, followingid, "displayPictureURL", username 
              FROM followers AS f 
              INNER JOIN users AS u 
@@ -180,5 +180,27 @@ export const getAnalytics = async (req, res, next) => {
         res.status(200).json(userData);
     } catch (error) {
         next(error)
+    }
+}
+
+export const getSavedPosts = async (req, res, next) => {
+    if (req.user.id != req.params.userId) {
+        return next(errorHandler(403, "Access denied"));
+    }
+
+    try {
+        const savedPost = await db.query(`
+            SELECT p.*, v.views FROM posts p
+            INNER JOIN "Views" v
+            ON v."postId" = p.id
+            INNER JOIN "savedPosts" sp
+            ON sp."postId" = p.id
+            WHERE sp."userId" = ${req.params.userId}`,
+            {
+                type: QueryTypes.SELECT
+            });
+        res.status(200).json(savedPost)
+    } catch (error) {
+        console.error(error);
     }
 }
