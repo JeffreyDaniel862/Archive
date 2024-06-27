@@ -180,9 +180,11 @@ export const getPersonalizedFeed = async (req, res, next) => {
     // fetch feeds from author the user follows order by desc in column createdAt if the authors don't have any feeds show some post in random.
     try {
         const feeds = await db.query(`
-            SELECT p.* FROM posts p
+            SELECT p.*, v.views FROM posts p
             INNER JOIN followers f
             ON f.followingid = p."userId"
+            INNER JOIN "Views" v
+            ON v."postId" = p.id
             WHERE followerid = ${req.params.userId}`,
         {
             type: QueryTypes.SELECT
