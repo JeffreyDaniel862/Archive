@@ -5,6 +5,7 @@ import Profile from "../components/Profile";
 import SideTab from "../components/Sidebar";
 import DashPosts from "../components/DashPosts";
 import DashAnalytics from "../components/DashAnalytics";
+import DashCollections from "../components/DashCollections";
 
 export default function Dashboard() {
     const { user } = useSelector(state => state.user);
@@ -26,6 +27,7 @@ export default function Dashboard() {
             {tab === 'profile' && <Profile />}
             {tab === 'posts' && <DashPosts />}
             {tab === 'analytics' && <DashAnalytics />}
+            {tab === 'collections' && <DashCollections />}
         </div>
     )
 }
