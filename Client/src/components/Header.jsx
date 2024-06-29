@@ -1,10 +1,12 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AiOutlineSearch } from 'react-icons/ai'
-import { FaMoon, FaSun } from 'react-icons/fa'
+import { FaAt, FaHome, FaMoon, FaSignOutAlt, FaSun, FaUser } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme } from '../store/themeSlice';
 import { logout } from '../store/userSlice';
+import { MdDashboard } from "react-icons/md";
+import { HiCollection } from 'react-icons/hi'
 
 export default function Header() {
     const path = useLocation().pathname;
@@ -14,7 +16,7 @@ export default function Header() {
     const navigate = useNavigate();
     const handleSignOut = async () => {
         const response = await fetch('/jd/auth/signout');
-        if(response.ok){
+        if (response.ok) {
             navigate('/sign-in');
             setTimeout(() => {
                 dispatch(logout());
@@ -25,7 +27,7 @@ export default function Header() {
     return <Navbar>
         <Link to={'/'} className='self-center whitespace-nowrap text-sm sm:text-xl dark:text-white font-semibold font-serif'>
             <span className='px-2 py-1 bg-gradient-to-r from-blue-600 via-sky-500 to-teal-300 rounded-md font-serif text-white'>Arc</span>
-           hive
+            hive
         </Link>
         <form>
             <TextInput type='text' placeholder='Search...' rightIcon={AiOutlineSearch} className='hidden lg:inline' />
@@ -50,12 +52,18 @@ export default function Header() {
                         </Dropdown.Header>
                         <Link to={'/dashboard?tab=profile'}>
                             <Dropdown.Item className='text-sm font-medium'>
-                                Profile
+                                <span className='flex gap-2 items-center'><FaUser /> Profile</span>
+                            </Dropdown.Item>
+                        </Link>
+                        <Dropdown.Divider />
+                        <Link to={'/dashboard?tab=collections'}>
+                            <Dropdown.Item className='text-sm font-medium'>
+                                <span className='flex gap-2 items-center'><HiCollection /> Collections</span>
                             </Dropdown.Item>
                         </Link>
                         <Dropdown.Divider />
                         <Dropdown.Item className='text-sm font-medium' onClick={handleSignOut}>
-                            Sign-Out
+                            <span className='flex gap-2 items-center'><FaSignOutAlt /> Sign-out</span>
                         </Dropdown.Item>
                     </Dropdown>
                     :
@@ -68,17 +76,17 @@ export default function Header() {
         <Navbar.Collapse>
             <Navbar.Link active={path === '/'} as={'div'}>
                 <Link to={'/'}>
-                    Home
+                    <span className='flex gap-2 items-center'><FaHome /> Home</span>
                 </Link>
             </Navbar.Link>
             <Navbar.Link active={path === '/about'} as={'div'}>
                 <Link to={'/about'}>
-                    About
+                    <span className='flex gap-2 items-center'><FaAt /> About</span>
                 </Link>
             </Navbar.Link>
             <Navbar.Link active={path === '/dashboard'} as={'div'}>
                 <Link to={'/dashboard?tab=analytics'}>
-                    Dashboard
+                    <span className='flex gap-2 items-center'><MdDashboard /> Dashboard</span>
                 </Link>
             </Navbar.Link>
 
