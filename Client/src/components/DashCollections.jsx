@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import Card from "./Card";
-import { Button } from "flowbite-react";
 import { useState } from "react";
 
 export default function DashCollections() {
@@ -20,10 +19,10 @@ export default function DashCollections() {
     return (
         <div className="p-4 flex flex-col gap-5 w-full">
             <div className="flex justify-center gap-6">
-                <button className={`p-2 rounded-md border border-green-700 dark:border-green-400 font-medium ${savedPost && 'bg-green-700 dark:bg-green-400'}`} outline onClick={() => setSavedPost(true)}>
+                <button className={`p-2 rounded-md border border-green-700 dark:border-green-400 font-medium ${savedPost && 'bg-green-700 dark:bg-green-400'}`} onClick={() => setSavedPost(true)}>
                     Saved Posts
                 </button>
-                <button className={`p-2 rounded-md border border-green-700 dark:border-green-400 font-medium ${!savedPost && 'bg-green-700 dark:bg-green-400'}`} outline onClick={() => setSavedPost(false)} >
+                <button className={`p-2 rounded-md border border-green-700 dark:border-green-400 font-medium ${!savedPost && 'bg-green-700 dark:bg-green-400'}`} onClick={() => setSavedPost(false)} >
                     Liked Posts
                 </button>
             </div>
@@ -32,9 +31,9 @@ export default function DashCollections() {
                 <div className="flex gap-6 md:gap-8 flex-wrap w-full">
                     {
                         !savedPost ?
-                            likedData && likedData.map(post => <Card key={post.id} post={post} />)
+                            likedData && likedData.length > 0 ? likedData.map(post => <Card key={post.id} post={post} />) : <p>No posts</p>
                             :
-                            savedPosts && savedPosts.map(post => <Card key={post.id} post={post} />)
+                            savedPosts && savedPosts.length > 0 ? savedPosts.map(post => <Card key={post.id} post={post} />) : <p>No posts</p>
                     }
                 </div>
             </div>

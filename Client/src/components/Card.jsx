@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default function Card({ post }) {
 
   const { data } = useQuery({
-    queryKey: ["AuthorOfthisPost"],
+    queryKey: ["AuthorOfthisPost", post.userId],
     queryFn: () => getAuthor(post.userId),
     enabled: Boolean(post)
   })
@@ -22,7 +22,7 @@ export default function Card({ post }) {
       <div className='p-3 flex flex-col gap-2'>
         <div className='flex gap-3 items-center justify-start text-sm border-b border-gray-400 pb-2'>
           <img className='w-8 h-8 border border-sky-600 dark:border-sky-300 rounded-full' src={data?.displayPicture} alt="author picture" />
-          <p className='font-bold'>{data?.username}</p>
+          <Link to={`/@${data?.username}`} className='font-bold hover:underline hover:text-blue-600'>{data?.username}</Link>
         </div>
         <p className='text-lg font-semibold line-clamp-1'>{post.title}</p>
         <div className='flex items-center justify-between'>
