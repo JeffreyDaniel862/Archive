@@ -1,16 +1,30 @@
 import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query'
 import Card from '../components/Card';
+import { useEffect } from 'react';
 
 export default function Home() {
 
     const { user } = useSelector(state => state.user);
 
-    const { data: posts } = useQuery({
+    const { data: posts, refetch } = useQuery({
         queryKey: ['personalizedFeed'],
-        queryFn: () => getPersonalizedFeed(user?.id),
-        enabled: Boolean(user)
+        queryFn: async () => {
+            const userId = user?.id
+            if (userId) {
+                return getPersonalizedFeed(userId);
+            } else {
+                return getPersonalizedFeed(0);
+            }
+        },
+        initialData: [],
     });
+
+    useEffect(() => {
+        if (user) {
+            refetch();
+        }
+    }, [user])
 
     return (
         <div className='p-4 flex flex-col items-center min-h-screen'>
