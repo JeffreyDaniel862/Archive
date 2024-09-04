@@ -186,15 +186,20 @@ export const getPersonalizedFeed = async (req, res, next) => {
             INNER JOIN "Views" v
             ON v."postId" = p.id
             WHERE followerid = ${req.params.userId}`,
-        {
-            type: QueryTypes.SELECT
-        });
-        if(feeds.length > 0){
+            {
+                type: QueryTypes.SELECT
+            });
+        if (feeds.length > 0) {
             return res.status(200).json(feeds);
         }
-        const randomFeeds = await db.query(`SELECT * FROM posts ORDER BY "createdAt" DESC LIMIT 9`, {
-            type: QueryTypes.SELECT
-        });
+        const randomFeeds = await db.query(`
+            SELECT p.*, v.views FROM posts p 
+            LEFT JOIN "Views" v
+            ON v."postId" = p.id
+            ORDER BY "createdAt" DESC LIMIT 9`,
+            {
+                type: QueryTypes.SELECT
+            });
         console.log("random");
         res.status(200).json(randomFeeds);
     } catch (error) {
