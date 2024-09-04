@@ -1,5 +1,5 @@
 import { Sidebar } from 'flowbite-react';
-import { HiUser, HiArrowSmRight, HiDocumentText, HiChartPie, HiCollection   } from 'react-icons/hi'
+import { HiUser, HiArrowSmRight, HiDocumentText, HiChartPie, HiCollection } from 'react-icons/hi'
 import { Link } from 'react-router-dom';
 
 export default function SideTab({ tab }) {
@@ -7,9 +7,9 @@ export default function SideTab({ tab }) {
         <div>
             <Sidebar className='w-full md:w-56 md:h-screen'>
                 <Sidebar.Items>
-                    <Sidebar.ItemGroup className='flex flex-col gap-1'>
-                        <Link to={'/dashboard?tab=analytics'}>
-                            <Sidebar.Item active={tab == 'analytics'} icon={HiChartPie } as='div'>
+                    <Sidebar.ItemGroup className='flex flex-row overflow-x-auto md:overflow-x-hidden md:flex-col gap-2 md:gap-1'>
+                        <Link className='mt-2' to={'/dashboard?tab=analytics'}>
+                            <Sidebar.Item active={tab == 'analytics'} icon={HiChartPie} as='div'>
                                 Analytics
                             </Sidebar.Item>
                         </Link>
@@ -28,10 +28,6 @@ export default function SideTab({ tab }) {
                                 Collections
                             </Sidebar.Item>
                         </Link>
-                        <Sidebar.Item icon={HiArrowSmRight}>
-                            Sign-Out
-                        </Sidebar.Item>
-                        <Sidebar.Item />
                     </Sidebar.ItemGroup>
                 </Sidebar.Items>
             </Sidebar>
