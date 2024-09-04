@@ -8,6 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSelector } from "react-redux";
 import queryClient, { } from '../utils/http'
 import UserModal from "../components/UserModal";
+import AuthModal from "../components/AuthModal";
 
 export default function UserProfile() {
     const { id } = useParams();
@@ -18,6 +19,7 @@ export default function UserProfile() {
     const [isFollowing, setIsFollowing] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -74,7 +76,7 @@ export default function UserProfile() {
     useEffect(() => {
         const following = followerData?.some(followInfo => followInfo.followerid == user?.id)
         setIsFollowing(following);
-    }, [followerData, author])
+    }, [followerData, author, user])
 
     const handleFollow = () => {
         mutate({ id: user?.id, followingId: author?.id });
@@ -97,8 +99,12 @@ export default function UserProfile() {
         setShowModal(false);
     }
 
+    const closeAuthModal = () => {
+        setShowAuthModal(false);
+    }
+
     const handleShowModal = (name) => {
-        if(name === "followers"){
+        if (name === "followers") {
             setShowFollowers(true);
         } else {
             setShowFollowers(false);
@@ -125,7 +131,7 @@ export default function UserProfile() {
                 </div>
                 <div className="flex items-center gap-10 mt-3 md:px-4">
                     {
-                        user?.id != author?.id && <Button color={isFollowing ? "blue" : "green"} pill onClick={handleFollow}>{isFollowing ? "Following" : "Follow"}</Button>
+                        user?.id != author?.id && <Button color={isFollowing ? "blue" : "green"} pill onClick={user ? handleFollow : () => setShowAuthModal(true)}>{isFollowing ? "Following" : "Follow"}</Button>
                     }
                     {
                         !copy ?
@@ -139,6 +145,7 @@ export default function UserProfile() {
                 </div>
             </div>
             <UserModal showModal={showModal} closeModal={closeModal} userArray={showFollowers ? followerData : followingData} title={showFollowers ? "Followers" : "Following"} />
+            <AuthModal showModal={showAuthModal} onClose={closeAuthModal} />
             {
                 authorPost?.length >= 1 ?
                     <>
